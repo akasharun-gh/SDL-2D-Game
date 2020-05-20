@@ -2,25 +2,30 @@
 
 //Constructor: initailize private members
 Character::Character(std::string filepath, SDL_Renderer *renderTarget){
-        playerPos.x = playerPos.y = 0;
-        playerPos.w = playerPos.h = 64;
-
         charImage = Character::LoadTexture(filepath, renderTarget);
         SDL_QueryTexture(charImage, NULL, NULL, &textureWidth, &textureHeight);
-        frameWidth = textureWidth / 13;
-        frameHeight = textureHeight / 21;
-
-        //Initialize Animation
-        playerRect.x = 0;
-        playerRect.y = frameHeight * 2;
-        playerRect.w = frameWidth;
-        playerRect.h = frameHeight;
-
 }
 
 // Destructor
 Character::~Character(){
     SDL_DestroyTexture(charImage);
+}
+
+void Character::initPlayerPos(int&& xy_init_pos){ //, int&& wh_init_val
+    playerPos.x = playerPos.y = xy_init_pos; // 0
+    playerPos.w = frameWidth;
+    playerPos.h = frameHeight; // 64
+}
+
+void Character::initPlayerRect( int&& sprite_w, int&& sprite_h, int&& x, int&& y){
+    frameWidth = textureWidth / sprite_w;
+    frameHeight = textureHeight / sprite_h;
+
+    //Initialize Animation
+    playerRect.x = frameWidth * x; // 0
+    playerRect.y = frameHeight * y; // 2
+    playerRect.w = frameWidth;
+    playerRect.h = frameHeight;
 }
 
 // Method to update the motion of the character
@@ -102,4 +107,34 @@ SDL_Texture *Character::LoadTexture(std::string filepath, SDL_Renderer *renderTa
     SDL_FreeSurface(surface);
 
     return texture;
+}
+
+void Character::automateMotion(int &frameRate, int &switchDir){
+    //int switchDir = 0;
+    if(frameRate == 10){
+    frameRate = 0;
+    playerRect.x += frameWidth;
+    
+    if(playerRect.x >= textureWidth)
+        playerRect.x = textureWidth/2;
+        
+    if(switchDir == 0 ){
+        playerPos.x += 8;
+        if(playerPos.x >= 480){
+            playerRect.y = frameHeight * 10;
+            playerPos.x -= 8;
+            switchDir = 1;
+        }
+    }
+    else{
+        playerPos.x -= 8;
+        if(playerPos.x <= 360){
+            playerRect.y = frameHeight * 4;
+            playerPos.x += 8;
+            switchDir = 0;
+        }
+
+    }
+    
+}
 }
