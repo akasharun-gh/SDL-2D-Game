@@ -5,21 +5,25 @@
 
 class Character{
     public:   
-    Character(){
-        playerPos.x = playerPos.y = 0;
-        playerPos.w = playerPos.h = 64;
+    Character(std::string filepath, SDL_Renderer *renderTarget);
+    ~Character();
 
-    }
     enum Dir{kUp, kDown, kLeft, kRight};
-    void updateMotion(SDL_Event &ev, int frameWidth, int frameHeight, int textureWidth);
-    void updateAnimation(int frameWidth, int frameHeight, int textureWidth, Dir);
-    void initailizeAnimation(int frameHeight, int frameWidth);
+    void updateMotion(SDL_Event &ev);
+    void updateAnimation(Dir);
+
     // Getters
     SDL_Rect& getPlayerPos(){ return playerPos; }
     SDL_Rect& getPlayerRect(){ return playerRect; }
+    SDL_Texture *getCharImage(){ return charImage; } 
+
+    SDL_Texture *LoadTexture(std::string filepath, SDL_Renderer *renderTarget);
 
     private:
     SDL_Rect playerRect;
     SDL_Rect playerPos;
+    int frameWidth, frameHeight;
+    int textureWidth, textureHeight;
+    SDL_Texture *charImage = nullptr;
     
 };
