@@ -13,11 +13,11 @@ EXE = anime.exe
 all: $(EXE)
 
 
-$(EXE): main.o
+$(EXE): main.o 
 
 	$(CXX) $< $(LDFLAGS) -o $@
 
-main.o: main.cpp character.cpp
+main.o: main.cpp character.cpp game.cpp renderer.cpp 
 
 	$(CXX) $(CXXFLAGS) $< -o $@
 
