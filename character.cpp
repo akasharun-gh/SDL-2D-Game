@@ -1,7 +1,8 @@
 #include "character.h"
 
 // Constructor: initailize private members
-Character::Character(std::string filepath, SDL_Renderer *renderTarget) {
+Character::Character(std::string filepath, SDL_Renderer *renderTarget)
+    : switchDir(0) {
   charImage = Animation::LoadTexture(filepath, renderTarget);
   SDL_QueryTexture(charImage, NULL, NULL, &textureWidth, &textureHeight);
 }
@@ -14,67 +15,67 @@ void Character::updateMotion(SDL_Event &ev) {
   if (ev.type == SDL_KEYDOWN) {
     switch (ev.key.keysym.sym) {
     case SDLK_UP:
-      Animation::animationPos.y -= 8;
-      Character::updateAnimation(kUp);
-      if (animationPos.y <= 0)
-        animationPos.y = 480 - animationPos.h;
+      dir = Dir::kUp;
       break;
     case SDLK_DOWN:
-      animationPos.y += 8;
-      Character::updateAnimation(kDown);
-      if (animationPos.y >= (480 - animationPos.h))
-        animationPos.y = 0;
+      dir = Dir::kDown;
       break;
     case SDLK_LEFT:
-      animationPos.x -= 8;
-      Character::updateAnimation(kLeft);
-      if (animationPos.x <= 0)
-        animationPos.x = 640 - animationPos.w;
+      dir = Dir::kLeft;
       break;
     case SDLK_RIGHT:
-      animationPos.x += 8;
-      Character::updateAnimation(kRight);
-      if (animationPos.x >= (640 - animationPos.h))
-        animationPos.x = 0;
+      dir = Dir::kRight;
       break;
     }
   }
 }
 
 // Method to update charcter animation from sprite sheet
-void Character::updateAnimation(Dir dir) {
+void Character::updateAnimation() {
   switch (dir) {
-  case kUp:
+  case Dir::kUp:
+    Animation::animationPos.y -= speed;
     animationRect.y = frameHeight * 8;
     animationRect.x += frameWidth;
+    if (animationPos.y <= 0)
+      animationPos.y = 640 - animationPos.h;
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
-  case kDown:
+  case Dir::kDown:
+    Animation::animationPos.y += speed;
     animationRect.y = frameHeight * 10;
     animationRect.x += frameWidth;
+    if (animationPos.y >= (640 - animationPos.h))
+      animationPos.y = 0;
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
-  case kLeft:
+  case Dir::kLeft:
+    Animation::animationPos.x -= speed;
     animationRect.y = frameHeight * 9;
     animationRect.x += frameWidth;
+    if (animationPos.x <= 0)
+      animationPos.x = 640 - animationPos.w;
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
-  case kRight:
+  case Dir::kRight:
+    Animation::animationPos.x += speed;
     animationRect.y = frameHeight * 11;
     animationRect.x += frameWidth;
+    if (animationPos.x >= (640 - animationPos.h))
+      animationPos.x = 0;
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
   }
 }
 
-void Character::automateMotion(int &frameRate, int &switchDir) {
+void Character::automateMotion(int const &frameRate) {
 
-  if (frameRate == 10) {
-    frameRate = 0;
+  if (frameRate % 10 == 0) {
+    // frameRate = 0;
     animationRect.x += frameWidth;
 
     if (animationRect.x >= textureWidth)
@@ -82,18 +83,27 @@ void Character::automateMotion(int &frameRate, int &switchDir) {
 
     if (switchDir == 0) {
       animationPos.x += 8;
-      if (animationPos.x >= 480) {
+      if (animationPos.x >= (initPos.x + 120)) {
         animationRect.y = frameHeight * 10;
         animationPos.x -= 8;
         switchDir = 1;
       }
     } else {
       animationPos.x -= 8;
-      if (animationPos.x <= 360) {
+      if (animationPos.x <= initPos.x) {
         animationRect.y = frameHeight * 4;
         animationPos.x += 8;
         switchDir = 0;
       }
     }
   }
+}
+
+bool Character::inCharacterLoc(SDL_Rect &loc) {
+  if (loc.x >= animationPos.x && loc.y >= animationPos.y &&
+      loc.x <= (animationPos.x + animationPos.w) &&
+      loc.y <= (animationPos.y + animationPos.h))
+    return true;
+  else
+    return false;
 }

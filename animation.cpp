@@ -6,10 +6,7 @@
 
 class Animation {
 public:
-  SDL_Rect animationRect;
-  SDL_Rect animationPos;
-  int frameWidth, frameHeight;
-  int textureWidth, textureHeight;
+  
 
   SDL_Texture *LoadTexture(std::string filepath, SDL_Renderer *renderTarget) {
     SDL_Texture *texture = nullptr;
@@ -32,6 +29,10 @@ public:
     animationPos.x = animationPos.y = xy_init_pos; // 0
     animationPos.w = frameWidth;
     animationPos.h = frameHeight; // 64*/
+
+    initPos.x = initPos.y = xy_init_pos; // 0
+    initPos.w = frameWidth;
+    initPos.h = frameHeight;
   }
 
   void initAnimationRect(int &&sprite_w, int &&sprite_h, int &&x, int &&y) {
@@ -51,4 +52,12 @@ public:
 
   SDL_Rect &getPlayerPos() { return animationPos; }
   SDL_Rect &getPlayerRect() { return animationRect; }
+
+
+protected:
+  SDL_Rect animationRect;
+  SDL_Rect animationPos;
+  SDL_Rect initPos;
+  int frameWidth, frameHeight;
+  int textureWidth, textureHeight;
 };

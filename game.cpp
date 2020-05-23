@@ -11,7 +11,6 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   Uint32 frame_end;
   Uint32 frame_duration;
   SDL_Texture *game_background = nullptr;
-  CoinAnimation *coin = nullptr;
 
   hero =
       new Character("game_images/anime_character.png", renderer.getRenderer());
@@ -24,18 +23,23 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   wolf->initAnimationRect(10, 12, 5, 4);
   wolf->initAnimationPos(360);
 
+  wolf2 = new Character("game_images/wolfsheet6.png", renderer.getRenderer());
+  wolf2->initAnimationRect(10, 12, 5, 4);
+  wolf2->initAnimationPos(240);
+
   game_background = Animation::LoadTexture("game_images/grass_bg.jpg",
                                            renderer.getRenderer());
   coin =
-      new CoinAnimation("game_images/coin-sprite.png", renderer.getRenderer());
+      new Coin("game_images/coin-sprite.png", renderer.getRenderer());
   coin->initAnimationRect(8, 3, 0, 1);
   coin->initAnimationPos(160);
   coin->resizeAnimation(32, 32);
+  coin->PlaceCoin();
 
   int frameRate = 0;
-  int frameRate2 = 0;
+
   bool isRunning = true;
-  int switchDir = 0;
+
   SDL_Event ev;
 
   while (isRunning) {
@@ -50,13 +54,18 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
       }
     }
 
-    wolf->automateMotion(frameRate, switchDir);
-    coin->spinAnimation(frameRate2);
+    hero->updateAnimation();
+    wolf->automateMotion(frameRate);
+    wolf2->automateMotion(frameRate);
+    coin->spinAnimation(frameRate);
+
+    Update();
 
     SDL_RenderClear(renderer.getRenderer());
     SDL_RenderCopy(renderer.getRenderer(), game_background, NULL, NULL);
     renderer.Render(hero);
     renderer.Render(wolf);
+    renderer.Render(wolf2);
     renderer.Render(coin);
     SDL_RenderPresent(renderer.getRenderer());
 
@@ -65,7 +74,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     // Keep track of how long each loop through the input/update/render cycle
     // takes.
     frameRate++;
-    frameRate2++;
+
     frame_duration = frame_end - frame_start;
 
     // After every second, update the window title.
@@ -74,6 +83,9 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
       frameRate = 0;
       title_timestamp = frame_end;
     }
+
+    if (frameRate >= 1000)
+      frameRate = 0;
 
     // If the time for this frame is too small (i.e. frame_duration is
     // smaller than the target ms_per_frame), delay the loop to
@@ -85,6 +97,17 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
   delete (hero);
   delete (wolf);
+  delete (wolf2);
+  delete (coin);
+}
+
+void Game::Update() {
+  
+  if (hero->inCharacterLoc(coin->getPlayerPos())) {
+    score++;
+    coin->PlaceCoin();
+    hero->speed += 0.5;
+  }
 }
 
 int Game::GetScore() const { return score; }

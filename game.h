@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 #include "character.cpp"
 #include "renderer.h"
-#include "coinAnimation.cpp"
+#include "coin.cpp"
 
 
 class Game : Animation {
@@ -18,7 +18,9 @@ class Game : Animation {
  private:
   Character *hero;
   Character *wolf;
-  CoinAnimation *coin;
+  Character *wolf2;
+  Coin *coin;
+  
 
   std::random_device dev;
   std::mt19937 engine;

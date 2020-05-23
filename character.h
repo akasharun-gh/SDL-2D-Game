@@ -9,18 +9,25 @@
 
 class Character : public Animation {
 public:
+  enum class Dir { kUp, kDown, kLeft, kRight };
   Character(std::string filepath, SDL_Renderer *renderTarget);
   ~Character();
 
-  enum Dir { kUp, kDown, kLeft, kRight };
+  
   void updateMotion(SDL_Event &ev);
-  void automateMotion(int &frameRate, int &switchDir);
-  void updateAnimation(Dir);
+  void automateMotion(int const &frameRate);
+  void updateAnimation();
+  bool inCharacterLoc(SDL_Rect &loc);
 
   SDL_Texture *getCharImage() { return charImage; }
 
+  Dir dir = Dir::kUp;
+
+  float speed{4.0f};
+
 private:
   SDL_Texture *charImage = nullptr;
+  int switchDir;
 };
 
 #endif
