@@ -13,24 +13,24 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
   SDL_Texture *game_background = nullptr;
 
   hero =
-      new Character("game_images/anime_character.png", renderer.getRenderer());
+      std::make_shared<Character>("game_images/anime_character.png", renderer.getRenderer());
   // w, h, x, y
   hero->initAnimationRect(13, 21, 0, 2);
   hero->initAnimationPos(60);
 
   // Create wolf animation
-  wolf = new Character("game_images/wolfsheet6.png", renderer.getRenderer());
+  wolf = std::make_shared<Wolf>("game_images/wolfsheet6.png", renderer.getRenderer());
   wolf->initAnimationRect(10, 12, 5, 4);
   wolf->initAnimationPos(360);
 
-  wolf2 = new Character("game_images/wolfsheet6.png", renderer.getRenderer());
+  wolf2 = std::make_shared<Wolf>("game_images/wolfsheet6.png", renderer.getRenderer());
   wolf2->initAnimationRect(10, 12, 5, 4);
   wolf2->initAnimationPos(240);
 
   game_background = Animation::LoadTexture("game_images/grass_bg.jpg",
                                            renderer.getRenderer());
   coin =
-      new Coin("game_images/coin-sprite.png", renderer.getRenderer());
+      std::make_shared<Coin>("game_images/coin-sprite.png", renderer.getRenderer());
   coin->initAnimationRect(8, 3, 0, 1);
   coin->initAnimationPos(160);
   coin->resizeAnimation(32, 32);
@@ -56,7 +56,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
     hero->updateAnimation();
     wolf->automateMotion(frameRate);
-    wolf2->automateMotion(frameRate);
+    
     coin->spinAnimation(frameRate);
 
     Update();
@@ -65,7 +65,12 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     SDL_RenderCopy(renderer.getRenderer(), game_background, NULL, NULL);
     renderer.Render(hero);
     renderer.Render(wolf);
-    renderer.Render(wolf2);
+
+    if(score > 5){
+      wolf2->automateMotion(frameRate);
+      renderer.Render(wolf2);
+    }
+    
     renderer.Render(coin);
     SDL_RenderPresent(renderer.getRenderer());
 
@@ -95,10 +100,6 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     }
   }
 
-  delete (hero);
-  delete (wolf);
-  delete (wolf2);
-  delete (coin);
 }
 
 void Game::Update() {

@@ -3,9 +3,11 @@
 
 #include <random>
 #include <SDL2/SDL.h>
+#include <memory>
 #include "character.cpp"
 #include "renderer.h"
 #include "coin.cpp"
+#include "wolf.cpp"
 
 
 class Game : Animation {
@@ -16,10 +18,10 @@ class Game : Animation {
   int GetScore() const;
 
  private:
-  Character *hero;
-  Character *wolf;
-  Character *wolf2;
-  Coin *coin;
+  std::shared_ptr<Character> hero;
+  std::shared_ptr<Wolf> wolf;
+  std::shared_ptr<Wolf> wolf2;
+  std::shared_ptr<Coin> coin;
   
 
   std::random_device dev;

@@ -17,7 +17,7 @@ $(EXE): main.o
 
 	$(CXX) $< $(LDFLAGS) -o $@
 
-main.o: main.cpp character.cpp game.cpp renderer.cpp animation.cpp coin.cpp
+main.o: main.cpp character.h character.cpp game.h game.cpp renderer.h renderer.cpp animation.cpp coin.h coin.cpp wolf.h wolf.cpp  
 
 	$(CXX) $(CXXFLAGS) $< -o $@
 

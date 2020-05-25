@@ -12,7 +12,7 @@ public:
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  template <class T> void Render(T *character);
+  template <class T> void Render(std::shared_ptr<T> character);
   void UpdateWindowTitle(int score, int fps);
   SDL_Renderer *getRenderer() { return renderTarget; }
 

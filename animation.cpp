@@ -40,11 +40,12 @@ public:
     frameHeight = textureHeight / sprite_h;
 
     // Initialize Animation
-    animationRect.x = frameWidth * x;  // 0
-    animationRect.y = frameHeight * y; // 2
+    animationRect.x = frameWidth * x;  
+    animationRect.y = frameHeight * y; 
     animationRect.w = frameWidth;
     animationRect.h = frameHeight;
   }
+  
   void resizeAnimation(int &&fwidth, int &&fheight) {
     animationPos.w = fwidth;
     animationPos.h = fheight;
@@ -58,6 +59,6 @@ protected:
   SDL_Rect animationRect;
   SDL_Rect animationPos;
   SDL_Rect initPos;
-  int frameWidth, frameHeight;
+  float frameWidth, frameHeight;
   int textureWidth, textureHeight;
 };

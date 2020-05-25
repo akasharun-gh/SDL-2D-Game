@@ -1,8 +1,7 @@
 #include "character.h"
 
 // Constructor: initailize private members
-Character::Character(std::string filepath, SDL_Renderer *renderTarget)
-    : switchDir(0) {
+Character::Character(std::string filepath, SDL_Renderer *renderTarget) {
   charImage = Animation::LoadTexture(filepath, renderTarget);
   SDL_QueryTexture(charImage, NULL, NULL, &textureWidth, &textureHeight);
 }
@@ -34,68 +33,45 @@ void Character::updateMotion(SDL_Event &ev) {
 void Character::updateAnimation() {
   switch (dir) {
   case Dir::kUp:
-    Animation::animationPos.y -= speed;
+    
     animationRect.y = frameHeight * 8;
     animationRect.x += frameWidth;
     if (animationPos.y <= 0)
       animationPos.y = 640 - animationPos.h;
+    Animation::animationPos.y -= speed;
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
   case Dir::kDown:
-    Animation::animationPos.y += speed;
+    
     animationRect.y = frameHeight * 10;
     animationRect.x += frameWidth;
     if (animationPos.y >= (640 - animationPos.h))
       animationPos.y = 0;
+    Animation::animationPos.y += speed;
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
   case Dir::kLeft:
-    Animation::animationPos.x -= speed;
+    
     animationRect.y = frameHeight * 9;
     animationRect.x += frameWidth;
     if (animationPos.x <= 0)
       animationPos.x = 640 - animationPos.w;
+    Animation::animationPos.x -= speed;
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
   case Dir::kRight:
-    Animation::animationPos.x += speed;
+    
     animationRect.y = frameHeight * 11;
     animationRect.x += frameWidth;
-    if (animationPos.x >= (640 - animationPos.h))
+    if (animationPos.x >= (640 - animationPos.w))
       animationPos.x = 0;
+    Animation::animationPos.x += speed;
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
-  }
-}
-
-void Character::automateMotion(int const &frameRate) {
-
-  if (frameRate % 10 == 0) {
-    // frameRate = 0;
-    animationRect.x += frameWidth;
-
-    if (animationRect.x >= textureWidth)
-      animationRect.x = textureWidth / 2;
-
-    if (switchDir == 0) {
-      animationPos.x += 8;
-      if (animationPos.x >= (initPos.x + 120)) {
-        animationRect.y = frameHeight * 10;
-        animationPos.x -= 8;
-        switchDir = 1;
-      }
-    } else {
-      animationPos.x -= 8;
-      if (animationPos.x <= initPos.x) {
-        animationRect.y = frameHeight * 4;
-        animationPos.x += 8;
-        switchDir = 0;
-      }
-    }
   }
 }
 

@@ -40,7 +40,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-template <class T> void Renderer::Render(T *character) {
+template <class T> void Renderer::Render(std::shared_ptr<T> character) {
   SDL_RenderCopy(renderTarget, character->getCharImage(),
                  &character->getPlayerRect(), &character->getPlayerPos());
 }

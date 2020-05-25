@@ -13,9 +13,8 @@ public:
   Character(std::string filepath, SDL_Renderer *renderTarget);
   ~Character();
 
-  
   void updateMotion(SDL_Event &ev);
-  void automateMotion(int const &frameRate);
+  // void automateMotion(int const &frameRate);
   void updateAnimation();
   bool inCharacterLoc(SDL_Rect &loc);
 
@@ -27,7 +26,6 @@ public:
 
 private:
   SDL_Texture *charImage = nullptr;
-  int switchDir;
 };
 
 #endif
