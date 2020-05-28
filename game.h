@@ -15,13 +15,17 @@ class Game : Animation {
   Game(std::size_t grid_width, std::size_t grid_height);
   void Run(Renderer &renderer,
            std::size_t target_frame_duration);
+  void Load_Init_Animations(Renderer &renderer);
   int GetScore() const;
+  bool alive{true};
+  int frameRate{0};
 
  private:
   std::shared_ptr<Character> hero;
   std::shared_ptr<Wolf> wolf;
   std::shared_ptr<Wolf> wolf2;
   std::shared_ptr<Coin> coin;
+  SDL_Texture *game_background{nullptr};
   
 
   std::random_device dev;

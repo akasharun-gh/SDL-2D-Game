@@ -12,15 +12,16 @@ EXE = anime.exe
 
 all: $(EXE)
 
-
+# $@ is the name of the file being generated, and $< the first prerequisite (usually the source file).
 $(EXE): main.o 
 
 	$(CXX) $< $(LDFLAGS) -o $@
 
-main.o: main.cpp character.h character.cpp game.h game.cpp renderer.h renderer.cpp animation.cpp coin.h coin.cpp wolf.h wolf.cpp  
+main.o: main.cpp character.h character.cpp game.h game.cpp renderer.h renderer.cpp animation.cpp coin.h coin.cpp wolf.h wolf.cpp 
 
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 clean:
 
 	del *.o && del $(EXE)
+

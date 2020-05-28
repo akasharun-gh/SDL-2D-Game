@@ -5,38 +5,41 @@
 
 Game::Game(std::size_t grid_width, std::size_t grid_height) {}
 
-void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
-  Uint32 title_timestamp = SDL_GetTicks();
-  Uint32 frame_start;
-  Uint32 frame_end;
-  Uint32 frame_duration;
-  SDL_Texture *game_background = nullptr;
-
-  hero =
-      std::make_shared<Character>("game_images/anime_character.png", renderer.getRenderer());
+void Game::Load_Init_Animations(Renderer &renderer) {
+  hero = std::make_shared<Character>("game_images/anime_character.png",
+                                     renderer.getRenderer());
   // w, h, x, y
   hero->initAnimationRect(13, 21, 0, 2);
   hero->initAnimationPos(60);
 
   // Create wolf animation
-  wolf = std::make_shared<Wolf>("game_images/wolfsheet6.png", renderer.getRenderer());
+  wolf = std::make_shared<Wolf>("game_images/wolfsheet6.png",
+                                renderer.getRenderer());
   wolf->initAnimationRect(10, 12, 5, 4);
   wolf->initAnimationPos(360);
 
-  wolf2 = std::make_shared<Wolf>("game_images/wolfsheet6.png", renderer.getRenderer());
+  wolf2 = std::make_shared<Wolf>("game_images/wolfsheet6.png",
+                                 renderer.getRenderer());
   wolf2->initAnimationRect(10, 12, 5, 4);
   wolf2->initAnimationPos(240);
 
   game_background = Animation::LoadTexture("game_images/grass_bg.jpg",
                                            renderer.getRenderer());
-  coin =
-      std::make_shared<Coin>("game_images/coin-sprite.png", renderer.getRenderer());
+  coin = std::make_shared<Coin>("game_images/coin-sprite.png",
+                                renderer.getRenderer());
   coin->initAnimationRect(8, 3, 0, 1);
   coin->initAnimationPos(160);
   coin->resizeAnimation(32, 32);
   coin->PlaceCoin();
+}
 
-  int frameRate = 0;
+void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
+  Uint32 title_timestamp = SDL_GetTicks();
+  Uint32 frame_start;
+  Uint32 frame_end;
+  Uint32 frame_duration;
+
+  Load_Init_Animations(renderer);
 
   bool isRunning = true;
 
@@ -54,11 +57,6 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
       }
     }
 
-    hero->updateAnimation();
-    wolf->automateMotion(frameRate);
-    
-    coin->spinAnimation(frameRate);
-
     Update();
 
     SDL_RenderClear(renderer.getRenderer());
@@ -66,12 +64,13 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     renderer.Render(hero);
     renderer.Render(wolf);
 
-    if(score > 5){
-      wolf2->automateMotion(frameRate);
+    if (score > 5) {
+      //wolf2->automateMotion(frameRate);
       renderer.Render(wolf2);
     }
-    
+
     renderer.Render(coin);
+
     SDL_RenderPresent(renderer.getRenderer());
 
     frame_end = SDL_GetTicks();
@@ -99,11 +98,34 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
     }
   }
-
 }
 
 void Game::Update() {
-  
+  if (score <= 5) {
+    if (hero->inCharacterLoc(wolf->getPlayerPos())) {
+      alive = false;
+      hero->deadAnimation();
+      wolf->postDeathAnimation(frameRate);
+      return;
+    }
+  } else {
+    if (hero->inCharacterLoc(wolf->getPlayerPos()) ||
+        hero->inCharacterLoc(wolf2->getPlayerPos())) {
+      alive = false;
+      hero->deadAnimation();
+      wolf->postDeathAnimation(frameRate);
+      wolf2->postDeathAnimation(frameRate);
+      return;
+    }
+  }
+
+  hero->updateAnimation();
+  wolf->automateMotion(frameRate);
+  coin->spinAnimation(frameRate);
+  if (score > 5) {
+      wolf2->automateMotion(frameRate);
+  }
+
   if (hero->inCharacterLoc(coin->getPlayerPos())) {
     score++;
     coin->PlaceCoin();

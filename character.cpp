@@ -33,7 +33,6 @@ void Character::updateMotion(SDL_Event &ev) {
 void Character::updateAnimation() {
   switch (dir) {
   case Dir::kUp:
-    
     animationRect.y = frameHeight * 8;
     animationRect.x += frameWidth;
     if (animationPos.y <= 0)
@@ -42,8 +41,8 @@ void Character::updateAnimation() {
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
+
   case Dir::kDown:
-    
     animationRect.y = frameHeight * 10;
     animationRect.x += frameWidth;
     if (animationPos.y >= (640 - animationPos.h))
@@ -52,8 +51,8 @@ void Character::updateAnimation() {
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
+
   case Dir::kLeft:
-    
     animationRect.y = frameHeight * 9;
     animationRect.x += frameWidth;
     if (animationPos.x <= 0)
@@ -62,8 +61,8 @@ void Character::updateAnimation() {
     if (animationRect.x >= (textureWidth - frameWidth * 4))
       animationRect.x = 0;
     break;
+
   case Dir::kRight:
-    
     animationRect.y = frameHeight * 11;
     animationRect.x += frameWidth;
     if (animationPos.x >= (640 - animationPos.w))
@@ -73,6 +72,13 @@ void Character::updateAnimation() {
       animationRect.x = 0;
     break;
   }
+}
+
+void Character::deadAnimation(){
+    animationRect.y = frameHeight * 20;
+    animationRect.x = frameWidth * 5;
+    /*if (animationRect.x >= (textureWidth - frameWidth * 6))
+      animationRect.x = 0;*/
 }
 
 bool Character::inCharacterLoc(SDL_Rect &loc) {

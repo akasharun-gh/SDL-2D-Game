@@ -14,9 +14,10 @@ public:
   ~Character();
 
   void updateMotion(SDL_Event &ev);
-  // void automateMotion(int const &frameRate);
+  void deadAnimation();
   void updateAnimation();
   bool inCharacterLoc(SDL_Rect &loc);
+  bool alive{true};
 
   SDL_Texture *getCharImage() { return charImage; }
 
