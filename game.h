@@ -34,6 +34,7 @@ class Game : Animation {
   std::uniform_int_distribution<int> random_h;
 
   int score{0};
+  int high_score{0};
 
   void Update();
 };

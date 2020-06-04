@@ -61,4 +61,5 @@ protected:
   SDL_Rect initPos;
   float frameWidth, frameHeight;
   int textureWidth, textureHeight;
+  enum class Dir { kUp, kDown, kLeft, kRight };
 };

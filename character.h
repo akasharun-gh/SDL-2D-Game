@@ -9,7 +9,7 @@
 
 class Character : public Animation {
 public:
-  enum class Dir { kUp, kDown, kLeft, kRight };
+  //enum class Dir { kUp, kDown, kLeft, kRight };
   Character(std::string filepath, SDL_Renderer *renderTarget);
   ~Character();
 

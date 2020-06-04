@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 
-
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
                    const std::size_t grid_width, const std::size_t grid_height)
@@ -40,13 +39,22 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
+// template class that copies given texture to current rendering target
 template <class T> void Renderer::Render(std::shared_ptr<T> character) {
   SDL_RenderCopy(renderTarget, character->getCharImage(),
                  &character->getPlayerRect(), &character->getPlayerPos());
 }
 
-void Renderer::UpdateWindowTitle(int score, int fps) {
+// Variadic template to handle rendering of different class types
+template <class T, class... Args>
+void Renderer::Render(std::shared_ptr<T> character, Args &&... args) {
+  Renderer::Render(character);
+  Renderer::Render(std::forward<Args>(args)...);
+}
+
+void Renderer::UpdateWindowTitle(int score, int high_score, int fps) {
   std::string title{"Coin Collector Score: " + std::to_string(score) +
+                    " Highscore: " + std::to_string(high_score) +
                     " FPS: " + std::to_string(fps)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }

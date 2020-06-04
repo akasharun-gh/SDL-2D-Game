@@ -74,18 +74,26 @@ void Character::updateAnimation() {
   }
 }
 
-void Character::deadAnimation(){
-    animationRect.y = frameHeight * 20;
-    animationRect.x = frameWidth * 5;
-    /*if (animationRect.x >= (textureWidth - frameWidth * 6))
-      animationRect.x = 0;*/
+void Character::deadAnimation() {
+  animationRect.y = frameHeight * 20;
+  animationRect.x = frameWidth * 5;
+  /*if (animationRect.x >= (textureWidth - frameWidth * 6))
+    animationRect.x = 0;*/
 }
 
 bool Character::inCharacterLoc(SDL_Rect &loc) {
-  if (loc.x >= animationPos.x && loc.y >= animationPos.y &&
-      loc.x <= (animationPos.x + animationPos.w) &&
-      loc.y <= (animationPos.y + animationPos.h))
+  if (loc.x + (loc.w / 2) >= animationPos.x &&
+      loc.y + (loc.h / 2) >= animationPos.y &&
+      loc.x + (loc.w / 2) <= (animationPos.x + animationPos.w) &&
+      loc.y + (loc.h / 2) <= (animationPos.y + animationPos.h))
     return true;
   else
     return false;
+
+  /*if (animationPos.x + animationPos.w < loc.x ||
+      animationPos.x > loc.x + loc.w ||
+      animationPos.y + animationPos.h < loc.y || animationPos.y > loc.y + loc.h)
+    return false;
+  else
+    return true;*/
 }

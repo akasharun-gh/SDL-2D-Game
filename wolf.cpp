@@ -77,18 +77,56 @@ void Wolf::automateMotion(int const &frameRate) {
   }
 }
 
-void Wolf::postDeathAnimation(int const &frameRate) {
+void Wolf::postDeathAnimation(int const &frameRate, Dir d) {
   // Animation::animationPos.x += speed;
   if (frameRate % 10 == 0) {
-    animationRect.w = frameWidth;
-    animationRect.h = frameHeight;
-    animationRect.y = frameHeight * 5;
-    animationRect.x += frameWidth;
-    Animation::resizeAnimation(std::move(frameWidth), std::move(frameHeight));
+
     // if (animationPos.x >= (640 - animationPos.h))
     //  animationPos.x = 0;
-    if (animationRect.x <= (textureWidth / 2) ||
-        animationRect.x >= textureWidth)
-      animationRect.x = textureWidth / 2;
+    switch (d) {
+    case Dir::kUp:
+      animationRect.w = frameWidth / 2;
+      animationRect.h = frameHeight * 2;
+      animationRect.y = frameHeight * 8;
+      animationRect.x += (frameWidth / 2);
+      Animation::resizeAnimation(frameWidth / 2, frameHeight * 2);
+      ;
+      if (animationRect.x >= (textureWidth - frameWidth * 7.5))
+        animationRect.x = 0;
+      break;
+
+    case Dir::kDown:
+      animationRect.w = frameWidth / 2;
+      animationRect.h = frameHeight * 2;
+      animationRect.y = frameHeight * 8;
+      animationRect.x += (frameWidth / 2);
+      Animation::resizeAnimation(frameWidth / 2, frameHeight * 2);
+      if (animationRect.x <= (textureWidth - frameWidth * 7.5) ||
+          animationRect.x >= (textureWidth - frameWidth * 5))
+        animationRect.x = frameWidth * 2.5;
+      break;
+
+    case Dir::kLeft:
+      animationRect.w = frameWidth;
+      animationRect.h = frameHeight;
+      animationRect.y = frameHeight * 5;
+      animationRect.x += frameWidth;
+      Animation::resizeAnimation(std::move(frameWidth), std::move(frameHeight));
+      if (animationRect.x <= (textureWidth / 2) ||
+          animationRect.x >= textureWidth)
+        animationRect.x = textureWidth / 2;
+      break;
+
+    case Dir::kRight:
+      animationRect.w = frameWidth;
+      animationRect.h = frameHeight;
+      animationRect.y = frameHeight * 11;
+      animationRect.x += frameWidth;
+      Animation::resizeAnimation(std::move(frameWidth), std::move(frameHeight));
+      if (animationRect.x <= (textureWidth / 2) ||
+          animationRect.x >= textureWidth)
+        animationRect.x = textureWidth / 2;
+      break;
+    }
   }
 }

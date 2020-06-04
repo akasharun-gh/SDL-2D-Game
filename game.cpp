@@ -53,7 +53,8 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
       if (ev.type == SDL_QUIT)
         isRunning = false;
       else {
-        hero->updateMotion(ev);
+        if (alive)
+          hero->updateMotion(ev);
       }
     }
 
@@ -61,15 +62,12 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
     SDL_RenderClear(renderer.getRenderer());
     SDL_RenderCopy(renderer.getRenderer(), game_background, NULL, NULL);
-    renderer.Render(hero);
-    renderer.Render(wolf);
+    renderer.Render(hero, wolf, coin);
 
     if (score > 5) {
-      //wolf2->automateMotion(frameRate);
+      // wolf2->automateMotion(frameRate);
       renderer.Render(wolf2);
     }
-
-    renderer.Render(coin);
 
     SDL_RenderPresent(renderer.getRenderer());
 
@@ -83,7 +81,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frameRate);
+      renderer.UpdateWindowTitle(score, high_score, frameRate);
       frameRate = 0;
       title_timestamp = frame_end;
     }
@@ -102,34 +100,38 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
 void Game::Update() {
   if (score <= 5) {
-    if (hero->inCharacterLoc(wolf->getPlayerPos())) {
+    if (hero->inCharacterLoc(wolf->getPlayerPos()) || !alive) {
       alive = false;
       hero->deadAnimation();
-      wolf->postDeathAnimation(frameRate);
+      wolf->postDeathAnimation(frameRate, hero->dir);
+      coin->spinAnimation(frameRate);
       return;
     }
   } else {
     if (hero->inCharacterLoc(wolf->getPlayerPos()) ||
-        hero->inCharacterLoc(wolf2->getPlayerPos())) {
+        hero->inCharacterLoc(wolf2->getPlayerPos()) || !alive) {
       alive = false;
       hero->deadAnimation();
-      wolf->postDeathAnimation(frameRate);
-      wolf2->postDeathAnimation(frameRate);
+      wolf->postDeathAnimation(frameRate, hero->dir);
+      wolf2->postDeathAnimation(frameRate, hero->dir);
+      coin->spinAnimation(frameRate);
       return;
     }
   }
 
-  hero->updateAnimation();
-  wolf->automateMotion(frameRate);
-  coin->spinAnimation(frameRate);
-  if (score > 5) {
+  if (alive) {
+    hero->updateAnimation();
+    wolf->automateMotion(frameRate);
+    coin->spinAnimation(frameRate);
+    if (score > 5) {
       wolf2->automateMotion(frameRate);
-  }
+    }
 
-  if (hero->inCharacterLoc(coin->getPlayerPos())) {
-    score++;
-    coin->PlaceCoin();
-    hero->speed += 0.5;
+    if (hero->inCharacterLoc(coin->getPlayerPos())) {
+      score++;
+      coin->PlaceCoin();
+      hero->speed += 0.5;
+    }
   }
 }
 

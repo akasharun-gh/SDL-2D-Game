@@ -9,7 +9,7 @@
 
 class Wolf : public Animation {
 public:
-  enum class Dir { kUp, kDown, kLeft, kRight };
+  //enum class Dir { kUp, kDown, kLeft, kRight };
   Wolf(std::string filepath, SDL_Renderer *renderTarget);
 
   SDL_Texture *getCharImage() { return wolfImage; }
@@ -17,7 +17,7 @@ public:
   Dir dir = Dir::kDown;
 
   void automateMotion(int const &frameRate);
-  void postDeathAnimation(int const &frameRate);
+  void postDeathAnimation(int const &frameRate, Dir d);
 
   float speed{8.0f};
 

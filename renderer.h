@@ -12,8 +12,11 @@ public:
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
+  // Variadic template class method that handles copying texture to given render target
   template <class T> void Render(std::shared_ptr<T> character);
-  void UpdateWindowTitle(int score, int fps);
+  template <class T, class... Args> void Render(std::shared_ptr<T> character, Args &&... args);
+
+  void UpdateWindowTitle(int score, int highscore, int fps);
   SDL_Renderer *getRenderer() { return renderTarget; }
 
 private:
