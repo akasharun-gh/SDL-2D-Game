@@ -1,6 +1,7 @@
 #ifndef WOLF_H
 #define WOLF_H
 
+#include "animation.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
@@ -9,8 +10,8 @@
 
 class Wolf : public Animation {
 public:
-  //enum class Dir { kUp, kDown, kLeft, kRight };
   Wolf(std::string filepath, SDL_Renderer *renderTarget);
+  ~Wolf();
 
   SDL_Texture *getCharImage() { return wolfImage; }
 

@@ -1,7 +1,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "animation.cpp"
+#include "animation.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
@@ -9,7 +9,6 @@
 
 class Character : public Animation {
 public:
-  //enum class Dir { kUp, kDown, kLeft, kRight };
   Character(std::string filepath, SDL_Renderer *renderTarget);
   ~Character();
 

@@ -1,32 +1,33 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <random>
-#include <SDL2/SDL.h>
-#include <memory>
-#include "character.cpp"
+#include "character.h"
+#include "coin.h"
 #include "renderer.h"
-#include "coin.cpp"
-#include "wolf.cpp"
-
+#include "wolf.h"
+#include "animation.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <memory>
+#include <random>
 
 class Game : Animation {
- public:
+public:
   Game(std::size_t grid_width, std::size_t grid_height);
-  void Run(Renderer &renderer,
-           std::size_t target_frame_duration);
+  void Run(Renderer &renderer, std::size_t target_frame_duration);
   void Load_Init_Animations(Renderer &renderer);
   int GetScore() const;
+  void init_highscore();
+  void update_highscore();
   bool alive{true};
   int frameRate{0};
 
- private:
+private:
   std::shared_ptr<Character> hero;
   std::shared_ptr<Wolf> wolf;
   std::shared_ptr<Wolf> wolf2;
   std::shared_ptr<Coin> coin;
   SDL_Texture *game_background{nullptr};
-  
 
   std::random_device dev;
   std::mt19937 engine;
@@ -34,7 +35,10 @@ class Game : Animation {
   std::uniform_int_distribution<int> random_h;
 
   int score{0};
-  int high_score{0};
+  int highscore{0};
+
+  // score on reaching which the second wolf is introduced to the game
+  int lvl2score{5};
 
   void Update();
 };

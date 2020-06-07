@@ -1,7 +1,7 @@
 
-#include "cleanup.h"
-#include "game.cpp"
-#include "renderer.cpp"
+//#include "cleanup.h"
+#include "game.h"
+#include "renderer.h"
 #include <iostream>
 
 

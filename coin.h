@@ -6,6 +6,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include "animation.h"
 
 class Coin : public Animation {
 public:

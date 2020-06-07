@@ -1,11 +1,17 @@
 #include "wolf.h"
+#include "animation.h"
 
+// Constructor
 Wolf::Wolf(std::string filepath, SDL_Renderer *renderTarget)
     : engine(dev()), random_dir(0, 3) {
   wolfImage = Animation::LoadTexture(filepath, renderTarget);
   SDL_QueryTexture(wolfImage, NULL, NULL, &textureWidth, &textureHeight);
 }
 
+// Destructor
+Wolf::~Wolf() { SDL_DestroyTexture(wolfImage); }
+
+// Method to automate the motion of the wolf on the screen
 void Wolf::automateMotion(int const &frameRate) {
 
   if (frameRate % 10 == 0) {
@@ -13,11 +19,9 @@ void Wolf::automateMotion(int const &frameRate) {
     dirSwitchRate += 1;
     if (dirSwitchRate > 1000)
       dirSwitchRate = 0;
-    if (dirSwitchRate % 20 == 0) {
+    if (dirSwitchRate % 20 == 0)
       dir = static_cast<Dir>(random_dir(engine));
-    }
 
-    // dir = Dir::kUp;
     switch (dir) {
     case Dir::kUp:
       Animation::animationPos.y -= speed;
@@ -77,12 +81,9 @@ void Wolf::automateMotion(int const &frameRate) {
   }
 }
 
+// Method to process animation of wolf after the hero dies
 void Wolf::postDeathAnimation(int const &frameRate, Dir d) {
-  // Animation::animationPos.x += speed;
   if (frameRate % 10 == 0) {
-
-    // if (animationPos.x >= (640 - animationPos.h))
-    //  animationPos.x = 0;
     switch (d) {
     case Dir::kUp:
       animationRect.w = frameWidth / 2;

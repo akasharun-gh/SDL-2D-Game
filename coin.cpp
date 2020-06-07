@@ -1,4 +1,6 @@
+#include <random>
 #include "coin.h"
+#include "animation.h"
 
 Coin::Coin(std::string filepath, SDL_Renderer *renderTarget)
     : engine(dev()), random_w(10, 608), random_h(10, 608) {
