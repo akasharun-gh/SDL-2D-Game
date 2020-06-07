@@ -1,13 +1,13 @@
 #include "game.h"
-#include "renderer.h"
 #include "animation.h"
 #include "character.h"
 #include "coin.h"
+#include "renderer.h"
 #include "wolf.h"
 
 #include <fstream>
 #include <iostream>
-
+#include <string>
 
 Game::Game(std::size_t grid_width, std::size_t grid_height) {
   init_highscore();
@@ -74,6 +74,7 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
 
     Update();
 
+    // Render the background and objects
     SDL_RenderClear(renderer.getRenderer());
     SDL_RenderCopy(renderer.getRenderer(), game_background, NULL, NULL);
     renderer.Render(hero, wolf, coin);
@@ -83,6 +84,12 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
     }
 
     SDL_RenderPresent(renderer.getRenderer());
+
+    if (!alive) {
+      msgBoxDelay++;
+      if (msgBoxDelay == 200)
+        displayMessageBox(isRunning);
+    }
 
     frame_end = SDL_GetTicks();
 
@@ -109,7 +116,6 @@ void Game::Run(Renderer &renderer, std::size_t target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
     }
   }
-  update_highscore();
 }
 
 /* Check for collison of hero with either wolves or coin.
@@ -149,6 +155,10 @@ void Game::Update() {
       score++;
       coin->PlaceCoin();
       hero->speed += 0.5;
+      if (score % 2 == 0) {
+        wolf->speed += 1.0;
+        wolf2->speed += 1.0;
+      }
     }
   }
 }
@@ -170,10 +180,85 @@ void Game::init_highscore() {
 
 // Updates game highscore if current score exceeds previous high score
 void Game::update_highscore() {
+  std::ofstream hsFile;
+  hsFile.open("highscore.txt", std::ios::out);
+  hsFile << score;
+  hsFile.close();
+}
+
+void Game::Restart() {
+  alive = true;
+  hero->initAnimationRect(13, 21, 0, 2);
+  hero->initAnimationPos(60);
+  hero->speed = 4.0;
+
+  wolf->initAnimationPos(360);
+  wolf->initAnimationRect(10, 12, 5, 4);
+  wolf->speed = 8.0;
+
+  wolf2->initAnimationPos(240);
+  wolf2->initAnimationRect(10, 12, 5, 4);
+  wolf2->speed = 8.0;
+
+  coin->PlaceCoin();
+
   if (score > highscore) {
-    std::ofstream hsFile;
-    hsFile.open("highscore.txt", std::ios::out);
-    hsFile << score;
-    hsFile.close();
+    update_highscore();
+    highscore = score;
+  }
+
+  score = 0;
+  msgBoxDelay = 0;
+}
+
+void Game::displayMessageBox(bool &isRunning) {
+  const SDL_MessageBoxButtonData buttons[] = {
+      {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Quit"},
+      {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 2, "Restart"},
+  };
+  const SDL_MessageBoxColorScheme colorScheme = {
+      {/* .colors (.r, .g, .b) */
+       /* [SDL_MESSAGEBOX_COLOR_BACKGROUND] */
+       {255, 0, 0},
+       /* [SDL_MESSAGEBOX_COLOR_TEXT] */
+       {0, 255, 0},
+       /* [SDL_MESSAGEBOX_COLOR_BUTTON_BORDER] */
+       {255, 255, 0},
+       /* [SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND] */
+       {0, 0, 255},
+       /* [SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED] */
+       {255, 0, 255}}};
+
+  std::string msg;
+  if (score <= highscore)
+    msg = "Your score: " + std::to_string(score) +
+          ", Highscore: " + std::to_string(highscore) + "\n Choose an action ";
+  else
+    msg = "Congratulations! New Highscore: " + std::to_string(score);
+
+  const SDL_MessageBoxData messageboxdata = {
+      SDL_MESSAGEBOX_INFORMATION, /* .flags */
+      NULL,                       /* .window */
+      "Game Over!",               /* .title */
+      msg.c_str(),                /* .message */
+      SDL_arraysize(buttons),     /* .numbuttons */
+      buttons,                    /* .buttons */
+      &colorScheme                /* .colorScheme */
+  };
+
+  int buttonid;
+  if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0) {
+    SDL_Log("error displaying message box");
+    return;
+  }
+
+  if (buttonid == -1) {
+    SDL_Log("no selection");
+  } else if (buttonid == 1) {
+    isRunning = false;
+    if (score > highscore)
+      update_highscore();
+  } else {
+    Restart();
   }
 }

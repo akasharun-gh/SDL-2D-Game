@@ -1,9 +1,9 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "character.h"
 #include <SDL2/SDL.h>
 #include <vector>
+#include <memory>
 
 
 class Renderer {
@@ -28,5 +28,18 @@ private:
   const std::size_t grid_width;
   const std::size_t grid_height;
 };
+
+// template class that copies given texture to current rendering target
+template <class T> void Renderer::Render(std::shared_ptr<T> character) {
+  SDL_RenderCopy(renderTarget, character->getCharImage(),
+                 &character->getPlayerRect(), &character->getPlayerPos());
+}
+
+// Variadic template to handle rendering of different class types
+template <class T, class... Args>
+void Renderer::Render(std::shared_ptr<T> character, Args &&... args) {
+  Renderer::Render(character);
+  Renderer::Render(std::forward<Args>(args)...);
+}
 
 #endif

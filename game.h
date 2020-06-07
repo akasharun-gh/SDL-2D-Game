@@ -19,6 +19,9 @@ public:
   int GetScore() const;
   void init_highscore();
   void update_highscore();
+  void displayMessageBox(bool &isRunning);
+  void Restart();
+
   bool alive{true};
   int frameRate{0};
 
@@ -36,7 +39,7 @@ private:
 
   int score{0};
   int highscore{0};
-
+  int msgBoxDelay{0};
   // score on reaching which the second wolf is introduced to the game
   int lvl2score{5};
 

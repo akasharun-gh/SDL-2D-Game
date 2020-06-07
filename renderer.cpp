@@ -1,7 +1,10 @@
-
-#include "renderer.h"
 #include <iostream>
 #include <string>
+#include "renderer.h"
+#include "character.h"
+#include "wolf.h"
+#include "coin.h"
+
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -39,18 +42,6 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-// template class that copies given texture to current rendering target
-template <class T> void Renderer::Render(std::shared_ptr<T> character) {
-  SDL_RenderCopy(renderTarget, character->getCharImage(),
-                 &character->getPlayerRect(), &character->getPlayerPos());
-}
-
-// Variadic template to handle rendering of different class types
-template <class T, class... Args>
-void Renderer::Render(std::shared_ptr<T> character, Args &&... args) {
-  Renderer::Render(character);
-  Renderer::Render(std::forward<Args>(args)...);
-}
 
 void Renderer::UpdateWindowTitle(int score, int high_score, int fps) {
   std::string title{"Coin Collector Score: " + std::to_string(score) +
