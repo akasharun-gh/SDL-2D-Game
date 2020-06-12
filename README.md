@@ -5,7 +5,7 @@ This game is based on the 2D Snake game. The premise of the game is that the pla
 
 ---
 <p align="center">
-<img src="data/CoinCollector_game.gif" title="CoinCollector_game.gif" border="3">
+<img src="Data/CoinCollector_game.gif" title="CoinCollector_game.gif" border="3">
 </p>
 
 ---
@@ -86,10 +86,6 @@ To run the SDL game on Windows, you may need to copy and paste all the `.dll` ex
 3. execute `./CoinCollector.exe`
 
 ## Rubrics
-File stucture: 
-        * `game_images` : this folder contains the sprite sheets and game background
-        * `game_metadata` : stores the highscore in `highscore.txt`
-        * `src` : this folder contains the header and '.cpp' files pertaining to the project
 To make it easier to identify the location in the code where the rubric criteria are implemented and met, I have added comment tags with the following legend specifying the tag names (the names after the colon, shown in bold),
 * Loops, Function, I/O : **LFIO**
 * Object Oriented Programming : **OOP**
