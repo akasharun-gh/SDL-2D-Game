@@ -1,14 +1,14 @@
 CXX = g++
 # Update these paths as necessary to match your installation
-SDL_LIB = -LC:/Users/akash/Desktop/C++\ Nanodegree/SDL2-2.0.12/i686-w64-mingw32/lib -lSDL2main -lSDL2
-SDL_INCLUDE = -IC:/Users/akash/Desktop/C++\ Nanodegree/SDL2-2.0.12/i686-w64-mingw32/include 
+SDL_LIB = -L{ path to SDL2 lib folder } -lSDL2main -lSDL2
+SDL_INCLUDE = -I{ path to SDL2 include folder } 
 
-SDL_IMAGE_LIB = -LC:/Users/akash/Desktop/C++\ Nanodegree/SDL2_image-2.0.5/i686-w64-mingw32/lib -lSDL2_image
-SDL_IMAGE_INCLUDE = -IC:/Users/akash/Desktop/C++\ Nanodegree/SDL2_image-2.0.5/i686-w64-mingw32/include
+SDL_IMAGE_LIB = -L{ path to SDL2_image lib folder } -lSDL2_image
+SDL_IMAGE_INCLUDE = -I{ path to SDL2_image include folder }
 # If your compiler is a bit older you may need to change -std=c++11 to -std=c++0x
 CXXFLAGS = -Wall -c -std=c++11 $(SDL_INCLUDE) $(SDL_IMAGE_INCLUDE)
 LDFLAGS = -lmingw32 -mwindows -mconsole $(SDL_LIB) $(SDL_IMAGE_LIB)
-EXE = anime.exe
+EXE = CoinCollector.exe
 
 all: $(EXE)
 
@@ -47,5 +47,5 @@ coin.o: coin.cpp coin.h animation.h
 
 clean:
 
-	rm *.o && rm $(EXE)
+	rm *.o && rm $(EXE) && rm game_metadata/highscore.txt
 
