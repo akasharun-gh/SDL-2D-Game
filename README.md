@@ -85,39 +85,3 @@ To run the SDL game on Windows, you may need to copy and paste all the `.dll` ex
 2. run `make` command
 3. execute `./CoinCollector.exe`
 
-## Rubrics
-To make it easier to identify the location in the code where the rubric criteria are implemented and met, I have added comment tags with the following legend specifying the tag names (the names after the colon, shown in bold),
-* Loops, Function, I/O : **LFIO**
-* Object Oriented Programming : **OOP**
-* Memory Management : **MM**
-
-### Loops, Functions, I/O (LFIO):
-1. Criteria: The project reads data from a file and process the data, or the program writes data to a file.
-    * In `game.cpp`, the methods `init_highscore` and `update_highscore` makes use of `fstream` to read and store the game highscore : lines 184, 187 and 197 
-2. Criteria: The project accepts user input and processes the input.
-    *  In `game.cpp`, line 76 uses `SDL_PollEvent` to check for user input (key pressed) and passes the event to the `updateMotion` method in `character.cpp`. Also, a `while` loop is used here.
-3. Criteria: The project demonstrates an understanding of C++ functions and control structures.
-    * In `game.cpp`, line 70 uses a `while` loop to represent the game loop within which the input, update and rendering steps occur.
-
-### Object Oriented Programming:
-1. Criteria: The project uses Object Oriented Programming techniques.
-    * All the header files within the `src` folder contain declarations for seperate classes and the respective '.cpp' files contain the definitions. The `character`, `wolf` and `coin` classes are child classes of the `animation` class.
-2. Criteria: Classes use appropriate access specifiers for class members.
-    * In `animation.h` the data members are declared as `protected` and the other classes have `private` data members.
-3. Criteria: Classes follow an appropriate inheritance hierarchy.
-    * The `Game` class is a composition of multiple classes such as `Character`, `Wolf` and `Coin` classes.
-4. Criteria: Templates generalize functions in the project
-    * The `Renderer` class makes use of variadic templates to render the objects of different classes: in `renderer.h`, lines 30 and 36.
-5. Criteria: Classes encapsulate behavior.
-    * All classes defined abide to this criteria.
-6. Criteria: Class constructors utilize member initialization lists.
-    * In `coin.cpp`: line 8, `renderer.cpp` : line 12, `wolf.cpp` : line 5.
-
-### Memory Management
-1. Criteria: The project uses smart pointers instead of raw pointers.
-    * In `game.cpp`: lines 28 onward, `renderer.h` : lines 30, 37.
-2. Criteria: The project makes use of references in function declarations.
-    * In `game.h` : lines 21, 25 uses referencing,  `animation.h` : line 16 onwards - uses rvalue referencing, lines 20, 21 - the methods return by reference.
-    * Classes `Wolf`, `Character`, `Coin` and `Animation` use methods that follow pass by reference methodology.  
-3. Criteria: The project uses destructors appropriately.
-    * In `renderer.cpp` : line 39 - destroys SDL objects, `wolf.cpp` : line 12, `character.cpp`: line 14, `coin.cpp` : line 15
